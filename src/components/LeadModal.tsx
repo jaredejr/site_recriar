@@ -28,7 +28,7 @@ declare global {
 }
 
 export function LeadModal() {
-  const { isOpen, closeModal, whatsappUrl } = useLead();
+  const { isOpen, closeModal, whatsappUrl, tracking } = useLead();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -60,18 +60,24 @@ export function LeadModal() {
   const onSubmit = async (data: LeadFormValues) => {
     setIsLoading(true);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    
+    // Lógica de Origem baseada na GENERAL_SPEC.md
+    let origem = "Orgânico";
+    if (tracking.gclid) {
+      origem = "Google Ads";
+    } else if (tracking.utm_source === "facebook" || tracking.utm_source === "instagram" || tracking.fbclid) {
+      origem = "Social Ads";
+    } else if (tracking.utm_source) {
+      origem = tracking.utm_source;
+    }
+
     const leadData: LeadData = {
       ...data,
-      origem: window.location.hostname,
-      gclid: urlParams.get("gclid"),
-      utm_source: urlParams.get("utm_source"),
-      utm_medium: urlParams.get("utm_medium"),
-      utm_campaign: urlParams.get("utm_campaign"),
+      ...tracking,
+      origem: origem,
       metadados: {
         url_conversao: whatsappUrl,
         data_hora: new Date().toISOString(),
+        hostname: window.location.hostname,
       },
     };
 

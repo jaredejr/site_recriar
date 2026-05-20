@@ -1,12 +1,22 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+
+interface TrackingParams {
+  gclid: string | null;
+  fbclid: string | null;
+  msclkid: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+}
 
 interface LeadContextType {
   isOpen: boolean;
   openModal: (whatsappUrl: string) => void;
   closeModal: () => void;
   whatsappUrl: string;
+  tracking: TrackingParams;
 }
 
 const LeadContext = createContext<LeadContextType | undefined>(undefined);
@@ -14,6 +24,41 @@ const LeadContext = createContext<LeadContextType | undefined>(undefined);
 export function LeadProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [whatsappUrl, setWhatsappUrl] = useState("");
+  const [tracking, setTracking] = useState<TrackingParams>({
+    gclid: null,
+    fbclid: null,
+    msclkid: null,
+    utm_source: null,
+    utm_medium: null,
+    utm_campaign: null,
+  });
+
+  useEffect(() => {
+    // Captura parâmetros da URL apenas uma vez no carregamento inicial do Provider
+    const params = new URLSearchParams(window.location.search);
+    
+    const newTracking = {
+      gclid: params.get("gclid"),
+      fbclid: params.get("fbclid"),
+      msclkid: params.get("msclkid"),
+      utm_source: params.get("utm_source"),
+      utm_medium: params.get("utm_medium"),
+      utm_campaign: params.get("utm_campaign"),
+    };
+
+    // Só atualiza se houver algum parâmetro presente
+    if (Object.values(newTracking).some(val => val !== null)) {
+      setTracking(newTracking);
+      // Opcional: Persistir no sessionStorage para navegação entre páginas
+      sessionStorage.setItem("unum_tracking", JSON.stringify(newTracking));
+    } else {
+      // Tenta recuperar do sessionStorage
+      const saved = sessionStorage.getItem("unum_tracking");
+      if (saved) {
+        setTracking(JSON.parse(saved));
+      }
+    }
+  }, []);
 
   const openModal = (url: string) => {
     setWhatsappUrl(url);
@@ -26,7 +71,7 @@ export function LeadProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <LeadContext.Provider value={{ isOpen, openModal, closeModal, whatsappUrl }}>
+    <LeadContext.Provider value={{ isOpen, openModal, closeModal, whatsappUrl, tracking }}>
       {children}
     </LeadContext.Provider>
   );

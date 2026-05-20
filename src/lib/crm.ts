@@ -2,14 +2,17 @@ export interface LeadData {
   nome: string;
   email?: string;
   telefone: string;
-  origem?: string;
+  origem: string; // Obrigatório. Deve indicar a fonte (ex: "Google Ads", "Orgânico", "Instagram")
   gclid?: string | null;
+  fbclid?: string | null;
+  msclkid?: string | null;
   utm_source?: string | null;
   utm_medium?: string | null;
   utm_campaign?: string | null;
   metadados?: {
     url_conversao: string;
     data_hora: string;
+    [key: string]: any;
   };
 }
 
