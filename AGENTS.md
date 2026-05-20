@@ -1,34 +1,21 @@
 # Centro Recriar - Guia do Agente
 
-Este arquivo contém as diretrizes fundamentais para o desenvolvimento e manutenção do site da Clínica Recriar. **Agente: Leia este arquivo sempre que iniciar uma sessão ou após comandos de compressão de contexto.**
+Este arquivo orienta a atuação da IA neste repositório.
 
 ## 🎯 Contexto do Projeto
-Site institucional de alto padrão para a Clínica Recriar, focado em conversão para avaliações neuropsicológicas e psicoterapia. O diferencial técnico é a captura inteligente de leads e integração com o CRM Unum People.
+Site institucional de alto padrão para a Clínica Recriar, focado em conversão para avaliações neuropsicológicas e psicoterapia.
 
-## 🏗️ Arquitetura e Componentes
-- **Framework**: Next.js 15 (App Router).
-- **Estilização**: Tailwind CSS 4.
-- **Captura de Leads**: `LeadModal` (intercepta links de WhatsApp).
-- **Integração**: Lógica de ingestão em `src/lib/crm.ts` enviando dados para o API Gateway via `X-API-Key`.
+## 🛠️ Metodologia e Regras
+1.  **Metodologia**: Utilize estritamente o `tlc-spec-driven` para qualquer nova funcionalidade ou refatoração. Consulte os specs em `.specs/`.
+2.  **Regras Globais**: Siga rigorosamente o arquivo [../rules.md](../rules.md) para padrões de segurança, tracking e engenharia.
+3.  **Baseline**: Consulte o arquivo [.specs/baseline_site_recriar_spec.md](.specs/baseline_site_recriar_spec.md) para entender o estado atual do projeto.
 
-## 🛠️ Padrões de Desenvolvimento & Segurança
-- **Rastreamento**: É mandatório capturar GCLID e UTMs da URL e persistir no `LeadContext` para envio ao CRM.
-- **SEO**: Manter dados estruturados JSON-LD (MedicalBusiness) atualizados.
-- **Performance**: Utilizar `next/image` para todas as fotos da clínica.
-- **Segurança**: As chaves de API (`NEXT_PUBLIC_API_KEY`) devem ser mantidas no `.env.local` e nunca expostas em código estático.
-
-### 🛡️ Protocolo de Engenharia Defensiva
-- **Fluxo de Conversão**: Qualquer alteração nos botões de WhatsApp deve garantir que o `LeadModal` continue sendo disparado antes do redirecionamento.
-- **Validação Visual**: Manter a estética minimalista e profissional (Cores da Clínica).
-
-## 🛡️ Diretrizes LGPD & Privacidade
-- **Transparência**: O formulário de lead deve informar que os dados serão utilizados para contato profissional.
-
-## 🧠 Persistência de Contexto (Context Anchor)
-- **Recuperação**: Execute `cat AGENTS.md` para se reorientar.
-- **Integração**: Consulte `CRM_INTEGRATION.md` para detalhes do payload enviado à API.
+## 🧰 Skills Recomendadas
+- `tlc-spec-driven`: Gestão de ciclo de vida do desenvolvimento.
+- `codenavi`: Para explorar a arquitetura de componentes e hooks.
+- `react-best-practices`: Para otimização de renderização no Next.js 15.
+- `mermaid-studio`: Para documentar fluxos de conversão.
 
 ## 📝 Comandos Úteis
 - `npm run dev`: Ambiente de desenvolvimento.
-- `npm run build`: Build de produção.
 - `npm run lint`: Verificação de padrões.
